@@ -8,21 +8,22 @@
 </head>
 <body>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="/">E-Shop</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="/cart">Cart</a></li>
-          <li class="nav-item"><a class="nav-link" href="/auth/logout">Logout</a></li>
-        </ul>
-      </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+  <div class="container">
+    <a class="navbar-brand" href="/">Shopping Cart</a>
+    <div>
+      {{#if user}}
+        <span class="text-white me-2">Welcome, {{user.name}}</span>
+        <a class="btn btn-outline-light btn-sm" href="/cart">Cart</a>
+        <a class="btn btn-outline-light btn-sm ms-2" href="/auth/logout">Logout</a>
+      {{else}}
+        <a class="btn btn-outline-light btn-sm" href="/auth/login">Login</a>
+        <a class="btn btn-outline-light btn-sm ms-2" href="/auth/register">Register</a>
+      {{/if}}
     </div>
-  </nav>
+  </div>
+</nav>
+
 
   <!-- Main Content -->
   <div class="container mt-4">
