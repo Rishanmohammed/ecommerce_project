@@ -1,16 +1,11 @@
-<h2 class="mb-4">🛍️ Our Products</h2>
-<div class="row">
+<h2>Available Products</h2>
+<div>
   {{#each products}}
-    <div class="col-md-4">
-      <div class="card mb-4 shadow-sm">
-        <img src="{{this.image}}" class="card-img-top" alt="{{this.name}}">
-        <div class="card-body text-center">
-          <h5 class="card-title">{{this.name}}</h5>
-          <p class="text-muted">₹{{this.price}}</p>
-          <p class="small">{{this.description}}</p>
-          <a href="#" class="btn btn-sm btn-primary">Add to Cart</a>
-        </div>
-      </div>
+    <div>
+      <h3>{{this.name}}</h3>
+      <p>{{this.description}}</p>
+      <p>Price: ₹{{this.price}}</p>
+      <img src="{{this.image}}" alt="{{this.name}}" width="150" />
     </div>
   {{/each}}
 </div>
