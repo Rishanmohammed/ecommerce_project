@@ -1,0 +1,29 @@
+<h2 class="mb-4">Your Cart</h2>
+
+{{#if cart.length}}
+  <table class="table table-bordered align-middle">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Price (₹)</th>
+        <th>Quantity</th>
+        <th>Total (₹)</th>
+      </tr>
+    </thead>
+    <tbody>
+     {{#each cart}}
+<tr>
+  <td>{{this.name}}</td>
+  <td>{{this.qty}}</td>
+  <td>₹{{this.price}}</td>
+  <td>₹{{multiply this.price this.qty}}</td>
+</tr>
+{{/each}}
+    </tbody>
+  </table>
+
+  <h4 class="text-end">Grand Total: ₹{{total}}</h4>
+  <a href="/checkout" class="btn btn-primary float-end">Proceed to Checkout</a>
+{{else}}
+  <p>Your cart is empty.</p>
+{{/if}}

@@ -17,10 +17,9 @@
           <h5 class="card-title">{{this.name}}</h5>
           <p class="card-text">{{this.description}}</p>
           <p class="fw-bold">₹{{this.price}}</p>
-          <!-- Add to Cart button -->
-          <a href="/cart/add/{{this._id}}" class="btn btn-primary mt-auto">
-            Add to Cart
-          </a>
+         <form action="/cart/add/{{this._id}}" method="POST">
+  <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
+</form>
         </div>
       </div>
     </div>

@@ -1,12 +1,16 @@
 const express = require("express");
+const router = express.Router();
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 
-const router = express.Router();
+// Login Page
+router.get("/login", (req, res) => {
+  res.render("auth/login");
+});
 
 // Register Page
 router.get("/register", (req, res) => {
-  res.render("auth/register", { layout: "user-layout" });
+  res.render("auth/register");
 });
 
 // Register Handle
@@ -15,35 +19,30 @@ router.post("/register", async (req, res) => {
   let errors = [];
 
   if (!name || !email || !password) {
-    errors.push({ msg: "Please fill in all fields" });
+    errors.push({ msg: "Please enter all fields" });
   }
 
   if (password.length < 6) {
-    errors.push({ msg: "Password should be at least 6 characters" });
+    errors.push({ msg: "Password must be at least 6 characters" });
   }
 
   if (errors.length > 0) {
-    res.render("auth/register", {
-      errors,
-      name,
-      email,
-      password,
-      layout: "user-layout"
-    });
+    res.render("auth/register", { errors, name, email, password });
   } else {
     try {
       let user = await User.findOne({ email: email });
       if (user) {
-        errors.push({ msg: "Email already registered" });
-        res.render("auth/register", { errors, name, email, password, layout: "user-layout" });
-      } else {
-        const newUser = new User({ name, email, password });
-        const salt = await bcrypt.genSalt(10);
-        newUser.password = await bcrypt.hash(password, salt);
-        await newUser.save();
-        req.flash("success_msg", "You are now registered, please log in");
-        res.redirect("/auth/login");
+        errors.push({ msg: "Email already exists" });
+        return res.render("auth/register", { errors, name, email, password });
       }
+
+      const newUser = new User({ name, email, password });
+      const salt = await bcrypt.genSalt(10);
+      newUser.password = await bcrypt.hash(password, salt);
+
+      await newUser.save();
+      req.flash("success_msg", "You are now registered and can log in");
+      res.redirect("/auth/login");
     } catch (err) {
       console.error(err);
       res.send("Error registering user");
@@ -51,12 +50,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// Login Page
-router.get("/login", (req, res) => {
-  res.render("auth/login", { layout: "user-layout" });
-});
-
-// Login Handle (basic for now)
+// Login Handle
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -72,8 +66,15 @@ router.post("/login", async (req, res) => {
       return res.redirect("/auth/login");
     }
 
-    // Save user in session
-    req.session.user = user;
+    // ✅ Save plain user data in session
+    req.session.user = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role || "user"
+    };
+
+    req.flash("success_msg", "Logged in successfully");
 
     if (user.role === "admin") {
       res.redirect("/admin/dashboard");
@@ -86,9 +87,10 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Logout
+// Logout Handle
 router.get("/logout", (req, res) => {
-  req.session.destroy(() => {
+  req.session.destroy(err => {
+    if (err) console.error(err);
     res.redirect("/auth/login");
   });
 });

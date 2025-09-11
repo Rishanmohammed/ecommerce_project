@@ -1,0 +1,39 @@
+<h2 class="mb-4">Your Cart</h2>
+
+{{#if cart.length}}
+  <table class="table table-bordered align-middle">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Price (₹)</th>
+        <th>Quantity</th>
+        <th>Total (₹)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each cart}}
+      <tr>
+        <td>{{this.name}}</td>
+        <td>{{this.price}}</td>
+        <td>
+          <div class="d-flex">
+            <form action="/cart/dec/{{this._id}}" method="POST" class="me-2">
+              <button class="btn btn-sm btn-outline-danger">-</button>
+            </form>
+            <span class="px-2">{{this.qty}}</span>
+            <form action="/cart/inc/{{this._id}}" method="POST" class="ms-2">
+              <button class="btn btn-sm btn-outline-success">+</button>
+            </form>
+          </div>
+        </td>
+        <td>{{multiply this.price this.qty}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <h4 class="text-end">Grand Total: ₹{{total}}</h4>
+  <a href="/checkout" class="btn btn-primary float-end">Proceed to Checkout</a>
+{{else}}
+  <p>Your cart is empty.</p>
+{{/if}}
