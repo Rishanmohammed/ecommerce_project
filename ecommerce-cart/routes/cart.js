@@ -41,16 +41,19 @@ router.post("/inc/:id", (req, res) => {
 // Decrement
 router.post("/dec/:id", (req, res) => {
   initCart(req);
-  const item = req.session.cart.find(p => p._id == req.params.id);
+  const id = req.params.id;
+  const item = req.session.cart.find(p => p._id == id);
+
   if (item) {
     item.qty -= 1;
-    if (item.qty <= 0) req.session.cart = req.session.cart.filter(p => p._id != req.params.id);
+    if (item.qty <= 0) {
+      req.session.cart = req.session.cart.filter(p => p._id != id);
+    }
   }
-req.session.cart = cart;  // update cart
-req.session.save(() => {
-  res.redirect("back");
-});
 
+  req.session.save(() => {
+    res.redirect("/cart");  // ✅ always go back to cart page
+  });
 });
 
 module.exports = router;
